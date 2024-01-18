@@ -1,7 +1,7 @@
 .PHONY: certs
 certs:
 	mkcert -install
-	cat "$(mkcert -CAROOT)/rootCA.pem" > ca.pem
+	$(shell cat "$(mkcert -CAROOT)/rootCA.pem" > ca.pem")
 	mkcert service-active.default.svc service.default.svc workload.default.svc
 	
 .PHONY: up
