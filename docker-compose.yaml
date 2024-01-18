@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - CERT_PATH=/certs/cert.pem
+      - KEY_PATH=/certs/key.pem
+    volumes:
+      - ./workload.default.svc.pem:/certs/cert.pem
+      - ./workload.default.svc-key.pem:/certs/key.pem
+  envoy:
+    image: envoyproxy/envoy:v1.28.0
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+      - ./ca.pem:/etc/certs/ca.crt
+      - ./service.default.svc.pem:/etc/certs/service.default.svc.pem
+      - ./service.default.svc-key.pem:/etc/certs/service.default.svc-key.pem
+      - ./service-active.default.svc.pem:/etc/certs/service-active.default.svc.pem
+      - ./service-active.default.svc-key.pem:/etc/certs/service-active.default.svc-key.pem
